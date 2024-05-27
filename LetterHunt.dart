@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class LetterHuntGame extends StatefulWidget {
+  final Color backgroundColor;
+  final Function(Color) onColorChange;
+
+  const LetterHuntGame({
+    required this.backgroundColor,
+    required this.onColorChange,
+  });
+
   @override
   _LetterHuntGameState createState() => _LetterHuntGameState();
 }
@@ -23,7 +31,7 @@ class _LetterHuntGameState extends State<LetterHuntGame> {
     'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRWRRRRRRRRRRRR',
     'BBBBBBBBBDBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
     'ZZZZZZZZEZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ',
-    'WWWWWWWWWWWWWWWWVWWWWWWWWWWWWWWWWWWWWWWWWW',
+    'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW',
     'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEOEEEEEEEE',
     'QQQQQQQQQQQQQQQQOQQQQQQQQQQQQQQQQQQQQQQQQQ',
     'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGJGGGGGGGGGGG',
@@ -138,78 +146,81 @@ class _LetterHuntGameState extends State<LetterHuntGame> {
       appBar: AppBar(
         title: Text('Letter Hunt'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Can you find the "$targetLetter" in this sequence?',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 20),
-            GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 6,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
+      body: Container(
+        color: widget.backgroundColor,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Can you find the "$targetLetter" in this sequence?',
+                style: TextStyle(fontSize: 20),
               ),
-              itemCount: sequence.length,
-              itemBuilder: (context, index) {
-                String letter = sequence[index];
-                return InkWell(
-                  onTap: () {
-                    if (gameStarted) {
-                      checkForLetter(letter);
-                      if (letter == targetLetter) {
-                        setState(() {
-                          found = true;
-                        });
+              SizedBox(height: 20),
+              GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 6,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                ),
+                itemCount: sequence.length,
+                itemBuilder: (context, index) {
+                  String letter = sequence[index];
+                  return InkWell(
+                    onTap: () {
+                      if (gameStarted) {
+                        checkForLetter(letter);
+                        if (letter == targetLetter) {
+                          setState(() {
+                            found = true;
+                          });
+                        }
                       }
-                    }
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: found && letter == targetLetter ? Colors.blue : Colors.grey,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text(
-                        letter,
-                        style: TextStyle(fontSize: 24, color: Colors.white),
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: found && letter == targetLetter ? Colors.blue : Colors.grey,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          letter,
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 20),
-            if (!found && gameStarted)
-              Text(
-                'Time Left: $timeLeft seconds',
-                style: TextStyle(fontSize: 18),
-              ),
-            SizedBox(height: 20),
-            if (!found && !gameStarted)
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    gameStarted = true;
-                  });
-                  startTimer();
+                  );
                 },
-                child: Text('Start'),
               ),
-            if (!found && gameStarted)
-              ElevatedButton(
-                onPressed: () {
-                  restartGame();
-                },
-                child: Text('Restart'),
-              ),
-          ],
+              SizedBox(height: 20),
+              if (!found && gameStarted)
+                Text(
+                  'Time Left: $timeLeft seconds',
+                  style: TextStyle(fontSize: 18),
+                ),
+              SizedBox(height: 20),
+              if (!found && !gameStarted)
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      gameStarted = true;
+                    });
+                    startTimer();
+                  },
+                  child: Text('Start'),
+                ),
+              if (!found && gameStarted)
+                ElevatedButton(
+                  onPressed: () {
+                    restartGame();
+                  },
+                  child: Text('Restart'),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -221,3 +232,4 @@ class _LetterHuntGameState extends State<LetterHuntGame> {
     super.dispose();
   }
 }
+

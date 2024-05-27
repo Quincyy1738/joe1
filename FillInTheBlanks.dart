@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-
 class FillInTheBlanksGame extends StatefulWidget {
+  final Color backgroundColor;
+  final Function(Color) onColorChange;
+
+  const FillInTheBlanksGame({
+    required this.backgroundColor,
+    required this.onColorChange,
+  });
+
   @override
   _FillInTheBlanksGameState createState() => _FillInTheBlanksGameState();
 }
@@ -33,7 +40,18 @@ class _FillInTheBlanksGameState extends State<FillInTheBlanksGame> {
     ['A. success', 'B. life', 'C. everything'],
   ];
 
-  List<String> _answers = ['A', 'C', 'B', 'A', 'B', 'A', 'B', 'B', 'A', 'C']; // Correct answers for each question
+  List<String> _answers = [
+    'A',
+    'C',
+    'B',
+    'A',
+    'B',
+    'A',
+    'B',
+    'B',
+    'A',
+    'C'
+  ]; // Correct answers for each question
 
   int _currentIndex = 0;
   String _selectedAnswer = '';
@@ -74,7 +92,8 @@ class _FillInTheBlanksGameState extends State<FillInTheBlanksGame> {
       appBar: AppBar(
         title: Text('Fill In The Blanks'),
       ),
-      body: Padding(
+      body: Container( // Change Padding to Container
+        color: widget.backgroundColor, // Set background color here
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -92,22 +111,27 @@ class _FillInTheBlanksGameState extends State<FillInTheBlanksGame> {
                   SizedBox(height: 20),
                   Column(
                     children: _choices[_currentIndex]
-                        .map((choice) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedAnswer = choice.split('.').first.trim();
-                            _checkAnswer();
-                          });
-                        },
-                        child: Text(choice),
-                      ),
-                    ))
+                        .map((choice) =>
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedAnswer = choice
+                                    .split('.')
+                                    .first
+                                    .trim();
+                                _checkAnswer();
+                              });
+                            },
+                            child: Text(choice),
+                          ),
+                        ))
                         .toList(),
                   ),
                   SizedBox(height: 20),
-                  if (_showAnswer) Text('Correct! The answer is ${_answers[_currentIndex]}'),
+                  if (_showAnswer) Text(
+                      'Correct! The answer is ${_answers[_currentIndex]}'),
                   if (_showTryAgain) Text('Try Again!'),
                 ],
               ),

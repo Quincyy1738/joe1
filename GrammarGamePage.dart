@@ -2,6 +2,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class GrammarGamePage extends StatefulWidget {
+  final Color backgroundColor;
+  final Function(Color) onColorChange;
+
+  const GrammarGamePage({
+    required this.backgroundColor,
+    required this.onColorChange,
+  });
+
   @override
   _GrammarGamePageState createState() => _GrammarGamePageState();
 }
@@ -113,7 +121,8 @@ class _GrammarGamePageState extends State<GrammarGamePage> {
       appBar: AppBar(
         title: Text('Correct The Grammar'),
       ),
-      body: Padding(
+      body: Container(
+        color: widget.backgroundColor,
         padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -185,9 +194,21 @@ class _GrammarGamePageState extends State<GrammarGamePage> {
 }
 
 void main() {
-  runApp(MaterialApp(
-    home: GrammarGamePage(),
-  ));
+  runApp(MyApp());
 }
 
-
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: GrammarGamePage(
+          backgroundColor: Colors.white, // Set default background color here
+          onColorChange: (Color color) {
+            // Handle background color change here if needed
+          },
+        ),
+      ),
+    );
+  }
+}

@@ -9,17 +9,18 @@ import 'GrammarPoliceGame.dart';
 import 'ScienceLevelPage.dart';
 import 'FillInTheBlanks.dart';
 import 'GrammarGamePage.dart';
+import 'ColorPicketButton.dart';
 
 class hpd4 extends StatefulWidget {
   @override
   _hpd4State createState() => _hpd4State();
 }
 
-class _hpd4State extends State<hpd4>
-    with SingleTickerProviderStateMixin {
+class _hpd4State extends State<hpd4> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   late Animation<double> _animation2;
+  Color _backgroundColor = Colors.white;
 
   @override
   void initState() {
@@ -40,51 +41,63 @@ class _hpd4State extends State<hpd4>
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
-    _controller.forward();
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _controller.dispose();
     super.dispose();
+  }
+
+  void _changeBackgroundColor(Color color) {
+    setState(() {
+      _backgroundColor = color;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     double _w = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: _backgroundColor,
       body: Stack(
         children: [
-          /// ListView
           ListView(
             physics:
             BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(_w / 17, _w / 20, 0, _w / 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                padding: EdgeInsets.fromLTRB(_w / 17, _w / 20, _w / 17, _w / 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Welcome to LENE',
-                      style: TextStyle(
-                        fontSize: 27,
-                        color: Colors.black.withOpacity(.6),
-                        fontWeight: FontWeight.w700,
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome to LENE',
+                            style: TextStyle(
+                              fontSize: 27,
+                              color: Colors.black.withOpacity(.6),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: _w / 35),
+                          Text(
+                            'Unlock a world of knowledge with games that make learning engaging and enjoyable for students.',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.black.withOpacity(.5),
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: _w / 35),
-                    Text(
-                      'Unlock a world of knowledge with games that make learning engaging and enjoyable for students.',
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.black.withOpacity(.5),
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
+                    SizedBox(width: 10),
+                    ColorPickerButton(onColorSelected: _changeBackgroundColor),
                   ],
                 ),
               ),
@@ -93,46 +106,69 @@ class _hpd4State extends State<hpd4>
                 Icons.analytics_outlined,
                 'Alphabet Jumble',
                 context,
-                AlphabetJumbleGame(),
+                AlphabetJumbleGame(
+                  backgroundColor: _backgroundColor,
+                  onBackgroundColorChanged: _changeBackgroundColor,
+                ),
                 Color(0xffFF6D6D),
                 Icons.all_inclusive,
                 'Letter Hunt',
-                LetterHuntGame(),
+                LetterHuntGame(
+                  backgroundColor: _backgroundColor,
+                  onColorChange: _changeBackgroundColor,
+                ),
               ),
               homePageCardsGroup(
                   Colors.lightGreen,
                   Icons.gamepad_outlined,
                   'Letter Matching',
                   context,
-                  LetterMatchingPage(),
+                  LetterMatchingPage(
+                    backgroundColor: _backgroundColor,
+                    onColorChange: _changeBackgroundColor,
+                  ),
                   Color(0xffffa700),
                   Icons.article,
                   'Sentence Scramble',
-                  SentenceScramblePage()),
+                  SentenceScramblePage(
+                    backgroundColor: _backgroundColor,
+                    onColorChange: _changeBackgroundColor, onBackgroundColorChanged: (Color ) {  },
+                  )),
               homePageCardsGroup(
                   Color(0xff63ace5),
                   Icons.ad_units_outlined,
                   'Grammar Police',
                   context,
-                  GrammarPoliceGame(),
+                  GrammarPoliceGame(
+                    backgroundColor: _backgroundColor,
+                    onColorChange: _changeBackgroundColor,
+                  ),
                   Color(0xfff37736),
                   Icons.article_sharp,
                   'Guess The Word',
-                  GamePage()),
+                  GamePage(
+                    backgroundColor: _backgroundColor,
+                    onColorChange: _changeBackgroundColor, onBackgroundColorChanged: (Color ) {  },
+                  )),
               homePageCardsGroup(
                   Color(0xffFF6D6D),
                   Icons.android,
                   'Fill In The Blanks',
                   context,
-                  FillInTheBlanksGame(),
+                  FillInTheBlanksGame(
+                    backgroundColor: _backgroundColor,
+                    onColorChange: _changeBackgroundColor,
+                  ),
                   Colors.lightGreen,
                   Icons.text_format,
                   'Correct The Grammar',
-                  GrammarGamePage()),
+                  GrammarGamePage(
+                    backgroundColor: _backgroundColor,
+                    onColorChange: _changeBackgroundColor,
+                  )),
               SizedBox(height: _w / 20),
             ],
           ),
-          // Blur the Status bar
           blurTheStatusBar(context),
         ],
       ),
@@ -260,7 +296,7 @@ class RouteWhereYouGo extends StatelessWidget {
         centerTitle: true,
         shadowColor: Colors.black.withOpacity(.5),
         title: Text(
-          'EXAMPLE  PAGE',
+          'EXAMPLE PAGE',
           style: TextStyle(
               color: Colors.black.withOpacity(.7),
               fontWeight: FontWeight.w600,
@@ -277,3 +313,4 @@ class RouteWhereYouGo extends StatelessWidget {
     );
   }
 }
+

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:language_tool/language_tool.dart';
 
-
 class GrammarPoliceGame extends StatefulWidget {
+  final Color backgroundColor;
+  final Function(Color) onColorChange;
+
+  const GrammarPoliceGame({
+    required this.backgroundColor,
+    required this.onColorChange,
+  });
+
   @override
   _GrammarPoliceGameState createState() => _GrammarPoliceGameState();
 }
@@ -72,7 +79,8 @@ class _GrammarPoliceGameState extends State<GrammarPoliceGame> {
       appBar: AppBar(
         title: Text('Grammar Police'),
       ),
-      body: Padding(
+      body: Container(
+        color: widget.backgroundColor,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,14 +99,10 @@ class _GrammarPoliceGameState extends State<GrammarPoliceGame> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _enteredSentence.isEmpty
-                  ? null
-                  : () {
+              onPressed: _enteredSentence.isEmpty ? null : () {
                 _checkGrammar(_enteredSentence);
               },
-              child: _isLoading
-                  ? CircularProgressIndicator()
-                  : Text('Check Grammar'),
+              child: _isLoading ? CircularProgressIndicator() : Text('Check Grammar'),
             ),
             SizedBox(height: 20),
             Text(

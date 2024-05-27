@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class LetterMatchingPage extends StatefulWidget {
+  final Color backgroundColor;
+  final Function(Color) onColorChange;
+
+  const LetterMatchingPage({
+    required this.backgroundColor,
+    required this.onColorChange,
+  });
+
   @override
   _LetterMatchingPageState createState() => _LetterMatchingPageState();
 }
@@ -151,7 +159,6 @@ class _LetterMatchingPageState extends State<LetterMatchingPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,31 +167,34 @@ class _LetterMatchingPageState extends State<LetterMatchingPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Instructions: Match each uppercase letter with its corresponding lowercase letter. Tap a letter to select it, then tap another letter to find its match. If the letters match, they will be locked in place. Try to match all the letters within 60 seconds!',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: _buildGameGrid(),
-            ),
-            if (!_isGameStarted)
-              Center(
-                child: ElevatedButton(
-                  onPressed: _startGame,
-                  child: Text('Start'),
-                ),
-              ),
-            if (_isGameStarted)
+        child: Container(
+          color: widget.backgroundColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                'Time Left: $_timeLeft seconds',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                'Instructions: Match each uppercase letter with its corresponding lowercase letter. Tap a letter to select it, then tap another letter to find its match. If the letters match, they will be locked in place. Try to match all the letters within 60 seconds!',
+                style: TextStyle(fontSize: 16),
               ),
-            if (_isGameComplete) _buildEndMessage(),
-          ],
+              SizedBox(height: 20),
+              Expanded(
+                child: _buildGameGrid(),
+              ),
+              if (!_isGameStarted)
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _startGame,
+                    child: Text('Start'),
+                  ),
+                ),
+              if (_isGameStarted)
+                Text(
+                  'Time Left: $_timeLeft seconds',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              if (_isGameComplete) _buildEndMessage(),
+            ],
+          ),
         ),
       ),
     );

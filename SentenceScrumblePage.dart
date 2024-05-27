@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
-
 class SentenceScramblePage extends StatefulWidget {
+  final Color backgroundColor;
+  final Function(Color) onBackgroundColorChanged;
+
+  SentenceScramblePage({required this.backgroundColor, required this.onBackgroundColorChanged, required void Function(Color color) onColorChange});
+
   @override
   _SentenceScramblePageState createState() => _SentenceScramblePageState();
 }
@@ -21,7 +25,7 @@ class _SentenceScramblePageState extends State<SentenceScramblePage> {
   ];
   int currentSentenceIndex = 0;
   List<String> shuffledWords = [];
-  List<String> completedSentences = [];  // List to hold completed sentences
+  List<String> completedSentences = [];
 
   @override
   void initState() {
@@ -47,7 +51,7 @@ class _SentenceScramblePageState extends State<SentenceScramblePage> {
     final currentSentence = shuffledWords.join(' ');
     if (currentSentence == sentences[currentSentenceIndex]) {
       setState(() {
-        completedSentences.add(sentences[currentSentenceIndex]); // Add the completed sentence to the list
+        completedSentences.add(sentences[currentSentenceIndex]);
       });
       showDialog(
         context: context,
@@ -97,55 +101,58 @@ class _SentenceScramblePageState extends State<SentenceScramblePage> {
       appBar: AppBar(
         title: Text('Sentence Scramble'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ReorderableListView.builder(
-                itemBuilder: (context, index) {
-                  return Card(
-                    key: Key('$index'),
-                    color: Colors.orange[200],
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      leading: Icon(Icons.drag_handle),
-                      title: Text(shuffledWords[index], style: TextStyle(fontSize: 18)),
+      body: Container(
+        color: widget.backgroundColor, // Set background color
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ReorderableListView.builder(
+                  itemBuilder: (context, index) {
+                    return Card(
+                      key: Key('$index'),
+                      color: Colors.orange[200],
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      child: ListTile(
+                        leading: Icon(Icons.drag_handle),
+                        title: Text(shuffledWords[index], style: TextStyle(fontSize: 18)),
+                      ),
+                    );
+                  },
+                  itemCount: shuffledWords.length,
+                  onReorder: onReorder,
+                ),
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: checkSentence,
+                  child: Text('Check Sentence'),
+                ),
+              ),
+              SizedBox(height: 20),
+              if (completedSentences.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Completed Sentences:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: completedSentences.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text('${index + 1}. ${completedSentences[index]}'),
+                        );
+                      },
                     ),
-                  );
-                },
-                itemCount: shuffledWords.length,
-                onReorder: onReorder,
-              ),
-            ),
-            SizedBox(height: 20),
-            Center( // Center the button horizontally
-              child: ElevatedButton(
-                onPressed: checkSentence,
-                child: Text('Check Sentence'),
-              ),
-            ),
-            SizedBox(height: 20),
-            if (completedSentences.isNotEmpty) // Display completed sentences list if not empty
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Completed Sentences:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 10),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: completedSentences.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text('${index + 1}. ${completedSentences[index]}'),
-                      );
-                    },
-                  ),
-                ],
-              ),
-          ],
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );

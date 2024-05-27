@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'dart:async'; // Add this import statement at the top of your file
+import 'dart:async';
 
 class AlphabetJumbleGame extends StatefulWidget {
+  final Color backgroundColor;
+  final Function(Color) onBackgroundColorChanged;
+
+  AlphabetJumbleGame({required this.backgroundColor, required this.onBackgroundColorChanged});
+
   @override
   _AlphabetJumbleGameState createState() => _AlphabetJumbleGameState();
 }
@@ -10,9 +15,9 @@ class AlphabetJumbleGame extends StatefulWidget {
 class _AlphabetJumbleGameState extends State<AlphabetJumbleGame> {
   String alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   List<String> jumbledAlphabet = [];
-  int timeLeft = 100; // Time in seconds for the timer
+  int timeLeft = 100;
   bool gameStarted = false;
-  int bestTime = -1; // Initialize the best time
+  int bestTime = -1;
 
   @override
   void initState() {
@@ -77,7 +82,7 @@ class _AlphabetJumbleGameState extends State<AlphabetJumbleGame> {
               onPressed: () {
                 setState(() {
                   jumbleAlphabet();
-                  timeLeft = 100; // Reset time to your desired value
+                  timeLeft = 100;
                 });
                 Navigator.of(ctx).pop();
               },
@@ -88,57 +93,56 @@ class _AlphabetJumbleGameState extends State<AlphabetJumbleGame> {
     }
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Alphabet Jumble'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Rearrange the letters into the correct order:',
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          Wrap(
-            children: List.generate(
-              jumbledAlphabet.length,
-                  (index) => _draggableLetter(jumbledAlphabet[index], index),
-            ).toList(),
-          ),
-          if (gameStarted)
+      body: Container(
+        color: widget.backgroundColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Time left: $timeLeft seconds'),
+              child: Text(
+                'Rearrange the letters into the correct order:',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
-          if (bestTime != -1)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Best Time: ${bestTime}s'),
+            Wrap(
+              children: List.generate(
+                jumbledAlphabet.length,
+                    (index) => _draggableLetter(jumbledAlphabet[index], index),
+              ).toList(),
             ),
-          ElevatedButton(
-            child: Text(gameStarted ? 'Restart' : 'Start'),
-            onPressed: () {
-              if (!gameStarted) {
-                startTimer();
-              } else {
-                setState(() {
-                  jumbleAlphabet();
-                  timeLeft = 100;
-                  gameStarted = false;
-                });
-              }
-            },
-          ),
-        ],
+            if (gameStarted)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Time left: $timeLeft seconds'),
+              ),
+            if (bestTime != -1)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Best Time: ${bestTime}s'),
+              ),
+            ElevatedButton(
+              child: Text(gameStarted ? 'Restart' : 'Start'),
+              onPressed: () {
+                if (!gameStarted) {
+                  startTimer();
+                } else {
+                  setState(() {
+                    jumbleAlphabet();
+                    timeLeft = 100;
+                    gameStarted = false;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -163,9 +167,8 @@ class _AlphabetJumbleGameState extends State<AlphabetJumbleGame> {
         );
       },
     )
-        : _letterCard(letter, Colors.blue); // If game hasn't started, just display the letter
+        : _letterCard(letter, Colors.blue);
   }
-
 
   Widget _letterCard(String letter, Color color) {
     return Card(
